@@ -4,7 +4,6 @@
     <c:param name="content">
         <h2>従業員　新規登録ページ</h2>
 
-        <!-- フォームをcreateServletで操作する -->
         <form method="POST" action="<c:url value='/employees/create' />">
             <c:import url="_form.jsp" />
         </form>
