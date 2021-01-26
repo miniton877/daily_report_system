@@ -36,7 +36,6 @@ public class EmployeesCreateServlet extends HttpServlet {
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     //CRF対策、NewServletで取得したセッションIDをフォームを介して受け取る
-        //Object型をString型にキャスト
         String _token = (String)request.getParameter("_token");
         //セッションIDが一致した場合
         if(_token != null && _token.equals(request.getSession().getId())){
@@ -59,14 +58,20 @@ public class EmployeesCreateServlet extends HttpServlet {
             Timestamp currentTime = new Timestamp(System.currentTimeMillis());
             e.setCreated_at(currentTime);
             e.setUpdated_at(currentTime);
-
-            //デリートフラグ？？？
-            e.setDelete_flag(0);
+            e.setDelete_flag(0);//デリートフラグ初期値セット
 
             //バリデーションのエラーをリスト化
-            //パスワードの入力値チェックと社員番号の重複チェック、true????
+            /*引数、Employee e, Boolean codeDuplicateCheckFlag, Boolean passwordCheckFlag
+             * 社員番号を入力してください：validateCode(空)
+             * 入力された社員番号の情報はすでに存在しています：codeDuplicateCheckFlag(true)
+             * 氏名を入力してください：validateName(空)
+             * パスワードを入力してください：validatePassword(true)
+             */
             List<String> errors = EmployeeValidator.validate(e,  true,  true);
-            //エラーがある場合、データベースと接続し、セッションID、オブジェクトe、エラーリストをnew.jspへ渡す？渡した後はどこへ行く？
+
+            /*エラーがある場合、データベースを切断し、セッションID、オブジェクトe、エラーリストをnew.jspからformへ
+             * 新規登録ページに、エラー表示、入力内容、（_token）が表示される。
+             */
             if(errors.size() > 0){
                 em.close();
 

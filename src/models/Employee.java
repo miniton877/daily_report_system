@@ -1,5 +1,6 @@
 package models;
 
+//checkRegisteredCode、e.code = :codeの意味？？
 import java.sql.Timestamp;
 
 import javax.persistence.Column;

@@ -44,26 +44,26 @@ public class EmployeesUpdateServlet extends HttpServlet {
         //editServletでセッションスコープに登録したemployee_idで、データを1件取得
         Employee e = em.find(Employee.class, (Integer)(request.getSession().getAttribute("employee_id")));
 
-        //editで社員番号が変更されていたら、重複チェックを行う????
-        Boolean codeDuplicateCheckFlag = true;
-        //if(e.getCode() = じゃないの？
+        //editで社員番号が入力された場合の重複チェックについて
+        Boolean codeDuplicateCheckFlag = true; //宣言
+        //既に保存済みのcode(e.getCode())、とeditで入力されたcode(getParameter())が一致した場合、重複チェックを行わない
         if(e.getCode().equals(request.getParameter("code"))){
             codeDuplicateCheckFlag = false;
-            //trueとfalseの意味は？
         }else{
-            //重複がない場合？？editから渡されたcodeをセットする
+            //codeが新規の場合、そのcodeで更新
             e.setCode(request.getParameter("code"));
         }
 
-        //editでパスワードが変更されていたら、何してるの？
-        Boolean passwordCheckFlag = true;
-        //editで入力されたpassword、キャストしないの？？
+        //editのパスワードについて
+        Boolean passwordCheckFlag = true; //宣言
         String password = request.getParameter("password");
-        //passwordが空の場合、変更市内
+        //passwordが空の場合、必須入力をチェックしない、passwordCheckFlagがfalse
         if(password == null || password.equals("")){
             passwordCheckFlag = false;
         }else{
-            //パスワードのハッシュ化を実行し、セットする
+            /*passwordが入力されていたら
+             * パスワードのハッシュ化を実行し、セットする
+             */
             e.setPassword(
                     EncryptUtil.getPasswordEncrypt(
                             password,

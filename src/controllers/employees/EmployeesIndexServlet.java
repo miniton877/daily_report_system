@@ -50,7 +50,7 @@ public class EmployeesIndexServlet extends HttpServlet {
                 .setFirstResult(15 * (page - 1)) //ページの最初のデータを決める　0, 15, 30,,,
                 .setMaxResults(15) //最初のデータから15件取得
                 .getResultList(); //15件分をリスト化する
-        //全登録件数を取得
+        //全登録件数をlong型で取得
         long employees_count = (long) em.createNamedQuery("getEmployeesCount", Long.class)
                 .getSingleResult();
         em.close();

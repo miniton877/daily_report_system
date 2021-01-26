@@ -31,7 +31,7 @@ public class EmployeesEditServlet extends HttpServlet {
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //データベースと接続、indexで選択したidのデータを取得
+        //データベースと接続、indexで選択したidのデータを1件取得
         EntityManager em = DBUtil.createEntityManager();
         Employee e = em.find(Employee.class, Integer.parseInt(request.getParameter("id")));
         em.close();
