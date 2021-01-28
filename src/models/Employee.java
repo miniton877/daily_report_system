@@ -1,6 +1,5 @@
 package models;
 
-//checkRegisteredCode、e.code = :codeの意味？？
 import java.sql.Timestamp;
 
 import javax.persistence.Column;
@@ -25,10 +24,15 @@ import javax.persistence.Table;
     @NamedQuery(
         name = "checkRegisteredCode",
         query = "SELECT COUNT(e) FROM Employee AS e WHERE e.code = :code"
+            //バリデーションクラスで使用（:codeは名前付きクエリ、バリデーションクラスで値をセットする）
     ),
     @NamedQuery(
         name = "checkLoginCodeAndPassword",
         query = "SELECT e FROM Employee AS e WHERE e.delete_flag = 0 AND e.code = :code AND e.password = :pass"
+            /*LoginServletで使用
+             * :codeと:passは名前付きクエリ、loginServletで値をセットする
+             * ログイン認証後、login_employeeとしてセッションスコープに保存される
+             */
     )
 })
 @Entity

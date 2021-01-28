@@ -3,7 +3,7 @@
 <c:import url="/WEB-INF/views/layout/app.jsp">
     <c:param name="content">
         <c:choose>
-            <%--レポート情報がある場合、フォームをupdateで動かす --%>
+            <%--indexで選択したレポート情報がある場合、フォームをupdateで動かす --%>
             <c:when test="${report != null}">
                 <h2>日報　編集ページ</h2>
                 <form method="POST" action="<c:url value='/reports/update' />">

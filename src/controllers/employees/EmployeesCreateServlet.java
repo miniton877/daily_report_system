@@ -42,10 +42,10 @@ public class EmployeesCreateServlet extends HttpServlet {
             //データベースと接続し、DTOをインスタンス化
             EntityManager em = DBUtil.createEntityManager();
             Employee e = new Employee();
-            //ブラウザの入力内容をセット
+            //入力された内容をセット
             e.setCode(request.getParameter("code"));
             e.setName(request.getParameter("name"));
-            //パスワードのハッシュ化メソッドの実行、アプリケーションスコープにpepperとして登録
+            //パスワードのハッシュ化メソッドを実行し、その結果をセット
             e.setPassword(
                     EncryptUtil.getPasswordEncrypt(
                             request.getParameter("password"),
@@ -60,32 +60,33 @@ public class EmployeesCreateServlet extends HttpServlet {
             e.setUpdated_at(currentTime);
             e.setDelete_flag(0);//デリートフラグ初期値セット
 
-            //バリデーションのエラーをリスト化
-            /*引数、Employee e, Boolean codeDuplicateCheckFlag, Boolean passwordCheckFlag
-             * 社員番号を入力してください：validateCode(空)
-             * 入力された社員番号の情報はすでに存在しています：codeDuplicateCheckFlag(true)
-             * 氏名を入力してください：validateName(空)
-             * パスワードを入力してください：validatePassword(true)
+            //バリデーション
+            /*EmployeeValidator.validate()の引数、Employee e, Boolean codeDuplicateCheckFlag, Boolean passwordCheckFlag
+             * エラーがある場合：表示内容
+             * validateCode(空蘭)：社員番号を入力してください
+             * codeDuplicateCheckFlag(true)：入力された社員番号の情報はすでに存在しています
+             * validateName(空蘭)：氏名を入力してください
+             * validatePassword(true)：パスワードを入力してください
              */
             List<String> errors = EmployeeValidator.validate(e,  true,  true);
 
-            /*エラーがある場合、データベースを切断し、セッションID、オブジェクトe、エラーリストをnew.jspからformへ
-             * 新規登録ページに、エラー表示、入力内容、（_token）が表示される。
-             */
+            //エラーがある場合、データベースを切断
             if(errors.size() > 0){
                 em.close();
 
+                //セッションID、入力情報、エラーリストをnew.jspに渡す（戻す）
                 request.setAttribute("_token",  request.getSession().getId());
                 request.setAttribute("employee",  e);
                 request.setAttribute("errors",  errors);;
                 RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/employees/new.jsp");
                 rd.forward(request,  response);
             }else{
-                //エラーがない場合、データベースに値を登録
-                //flushメッセージをセッションスコープに登録しindexへ渡す
+                //エラーがない場合、データベースに値を保存
                 em.getTransaction().begin();
                 em.persist(e);
                 em.getTransaction().commit();
+
+              //flushメッセージをセッションスコープに登録しindexへ渡す
                 request.getSession().setAttribute("flush", "登録が完了しました。");
                 em.close();
 

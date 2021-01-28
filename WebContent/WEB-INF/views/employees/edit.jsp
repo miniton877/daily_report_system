@@ -6,16 +6,17 @@
         <c:choose>
         <c:when test="${employee != null}">
             <h2>id：${employee.id}の従業員情報　編集ページ</h2>
-            <%--indexで取得した情報を変更する --%>
+
+            <%--indexで取得した従業員情報情報を変更する --%>
             <p>(パスワードは変更する場合のみ入力してください)</p>
-                <%--updateでフォーム動作させる --%>
+                <%--フォームをupdateで動作させる --%>
                 <form method="POST" action="<c:url value='/employees/update' />">
                 <c:import url="_form.jsp" />
                 </form>
 
-            <%--indexで取得した情報を削除する --%>
+            <%--indexで取得した従業員情報を削除する --%>
             <p><a href="#" onclick="confirmDestroy();">この従業員情報を削除する</a></p>
-                <%--destroyでフォームを動作させる --%>
+                <%--フォームをdestroyで動作させる --%>
                 <form method="POST" action="<c:url value='/employees/destroy' />">
                     <%--セッションIDの隠れデータ --%>
                     <input type="hidden" name ="_token" value="${_token}" />
@@ -28,6 +29,7 @@
                 }
                 </script>
             </c:when>
+            <%--従業員情報がない場合 --%>
             <c:otherwise>
                 <h2>お探しのデータは見つかりませんでした。</h2>
             </c:otherwise>

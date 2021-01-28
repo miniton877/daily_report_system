@@ -10,13 +10,14 @@ import utils.DBUtil;
 
 public class EmployeeValidator {
     public static List<String> validate(Employee e, Boolean codeDuplicateCheckFlag, Boolean passwordCheckFlag) {
-        /*errorsリストを作成する
-         * 社員番号を入力してください：validateCode()
-         * 入力された社員番号の情報はすでに存在しています：codeDuplicateCheckFlag()
-         * 氏名を入力してください：validateName()
-         * パスワードを入力してください：validatePassword()
-         */
+
         List<String> errors = new ArrayList<String>();
+            /*errorsリスト（該当する場合）
+             * 社員番号を入力してください：validateCode()
+             * 入力された社員番号の情報はすでに存在しています：codeDuplicateCheckFlag()
+             * 氏名を入力してください：validateName()
+             * パスワードを入力してください：validatePassword()
+             */
 
         String code_error = validateCode(e.getCode(), codeDuplicateCheckFlag);
         if(!code_error.equals("")) {
@@ -48,14 +49,14 @@ public class EmployeeValidator {
          */
         if(codeDuplicateCheckFlag) {  //if()の中にBoolean型の変数
             EntityManager em = DBUtil.createEntityManager();
-            /*ここで何しているの？
-             * checkRegisteredCode=該当する社員番号の件数
-             */
+
+            //checkResisteredCodeのqueryに入力された社員番号を代入し、データベースで該当する従業員数をlong型で格納
             long employees_count = (long)em.createNamedQuery("checkRegisteredCode", Long.class)
                                            .setParameter("code", code)
                                              .getSingleResult();
             em.close();
-            /*employees_countに結果が代入された場合code_errorに文字列代入
+
+            /*employees_countが0より大きい場合、code_errorに文字列代入
              * createのときのみ
              */
             if(employees_count > 0) {
@@ -63,7 +64,7 @@ public class EmployeeValidator {
             }
         }//if(codeDuplicateCheckFlag)の終了
 
-        return "";  //codeが入力され、codeDuplicateCheckFlagがfalseのとき
+        return "";  //codeが入力されcodeDuplicateCheckFlagがfalseのとき、空蘭を返す
     }
 
     // 社員名の必須入力チェック
@@ -78,7 +79,7 @@ public class EmployeeValidator {
 
     // パスワードの必須入力チェック、重複チェックはしない
     private static String validatePassword(String password, Boolean passwordCheckFlag) {
-        /*passwordCheckFlagがtrueでpassword入力が空のとき
+        /*passwordCheckFlagがtrueでpassword入力がないとき
          *  createの場合
          *  password_errorに文字列代入
          */

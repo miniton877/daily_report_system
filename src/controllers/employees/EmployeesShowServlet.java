@@ -36,7 +36,7 @@ public class EmployeesShowServlet extends HttpServlet {
         Employee e  = em.find(Employee.class, Integer.parseInt(request.getParameter("id")));
         em.close();
         //リクエストスコープでJSPに値を渡す
-        request.setAttribute("employee",  e);;
+        request.setAttribute("employee",  e); //indexで選択した従業員情報
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/employees/show.jsp");
         rd.forward(request,  response);
     }

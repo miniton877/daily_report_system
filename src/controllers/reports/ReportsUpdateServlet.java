@@ -44,7 +44,7 @@ public class ReportsUpdateServlet extends HttpServlet {
             //editから渡されたレポートidでレポート情報を1件検索しクラス型オブジェクトrに代入
             Report r = em.find(Report.class, (Integer)(request.getSession().getAttribute("report_id")));
 
-            //_form.jspのレポート情報をセット
+            //入力されたレポート情報をセット
             r.setReport_date(Date.valueOf(request.getParameter("report_date")));
             r.setTitle(request.getParameter("title"));
             r.setContent(request.getParameter("content"));

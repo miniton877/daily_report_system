@@ -25,15 +25,21 @@ import javax.persistence.Table;
             name = "getReportsCount",
             query = "SELECT COUNT(r) FROM Report AS r"
             ),
-    //自分のレポートを取得する
     @NamedQuery(
             name = "getMyAllReports",
             query = "SELECT r FROM Report AS r WHERE r.employee = :employee ORDER BY r.id DESC"
+                    /*自分のレポートをトップページに表示させる
+                     * TopPageIndexServletで使用
+                     * :employeeにlogin_employeeをセットしてデータベースよりレポート情報を取得
+                     */
             ),
-    //自分のレポート件数を取得する
     @NamedQuery(
             name = "getMyReportsCount",
             query = "SELECT COUNT(r) FROM Report AS r WHERE r.employee = :employee"
+                    /*自分のレポート件数をトップページに表示させる
+                     * TopPageIndexServletで使用
+                     * :employeeにlogin_employeeをセットしてデータベースよりレポート件数を取得
+                     */
             )
 })
 @Entity
@@ -43,9 +49,13 @@ public class Report {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-@ManyToOne  //1対多、一人の従業員が複数のレポートを持つ
+         /*テーブルの結合、1対多（一人の従業員が複数のレポートを持つ）
+          * ログインして取得したemployee_idを介してemployeesテーブルと結合
+          * ログインしている従業員の情報をオブジェクトのままemployeeフィールドに格納
+          */
+@ManyToOne
 @JoinColumn(name = "employee_id", nullable = false)
-private Employee employee;  //ログイン状態の従業員情報をオブジェクトのままフィールドに格納
+private Employee employee;
 
 @Column(name = "report_date", nullable = false)
 private Date report_date;
@@ -53,7 +63,7 @@ private Date report_date;
 @Column(name = "title", length = 255, nullable = false)
 private String title;
 
-@Lob  //テキストエリアの指定、改行も含めたコンテントがデータベースに保存される
+@Lob  //テキストエリアの指定、改行も含め内容がデータベースに保存される
 @Column(name = "content", nullable = false)
 private String content;
 

@@ -3,7 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:import url="../layout/app.jsp">
     <c:param name="content">
-        <%--topPageServletで登録したflushメッセージを表示する --%>
+        <%--topPageServletから渡されたflushメッセージを表示する --%>
         <c:if test="${flush != null}">
             <div id="flush_success">
                 <c:out value="${flush}"></c:out>

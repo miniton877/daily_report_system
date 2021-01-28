@@ -31,39 +31,42 @@ public class ReportsIndexServlet extends HttpServlet {
     /**
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         EntityManager em = DBUtil.createEntityManager();
 
         //ページネーション
-        int page;  //宣言
+        int page; //宣言
         //ページの取得、失敗したら初期値1
-        try{
+        try {
             page = Integer.parseInt(request.getParameter("page"));
-        }catch(Exception e){
+        } catch (Exception e) {
             page = 1;
         }
-        //ページの最初の結果を取得、最大15件、リスト化してreportsに格納する
+        //getAllReportsのクエリを実行しデータベースから全レポート情報を取得、15件分のオブジェクトをリスト化してreportsに格納する
         List<Report> reports = em.createNamedQuery("getAllReports", Report.class)
-                                    .setFirstResult(15 * (page - 1))
-                                    .setMaxResults(15)
-                                    .getResultList();
+                .setFirstResult(15 * (page - 1))
+                .setMaxResults(15)
+                .getResultList();
 
-                //登録された全件数を取得
-                long reports_count = (long)em.createNamedQuery("getReportsCount", Long.class)
-                        .getSingleResult();
+        //登録された全件数を取得
+        long reports_count = (long) em.createNamedQuery("getReportsCount", Long.class)
+                .getSingleResult();
 
-                em.close();
+        em.close();
 
-                //reportsリスト、登録件数、ページ、flushメッセージをjspに渡す
-                request.setAttribute("reports", reports);
-                request.setAttribute("reports_count",  reports_count);
-                request.setAttribute("page",  page);
-                if(request.getSession().getAttribute("flush") != null){
-                    request.setAttribute("flush",  request.getSession().getAttribute("flush"));
-                    request.getSession().removeAttribute("flush");
-                }
-          RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/reports/index.jsp");
-          rd.forward(request,  response);
+        //15件分のreportsリスト、レポート登録件数、ページをリクエストスコープに登録してreports/index.jspにに渡す
+        request.setAttribute("reports", reports);
+        request.setAttribute("reports_count", reports_count);
+        request.setAttribute("page", page);
+
+        //flushメッセージがセッションスコープに保存されていたら、リクエストコープにflushメッセージを渡しセッションスコープから削除する
+        if (request.getSession().getAttribute("flush") != null) {
+            request.setAttribute("flush", request.getSession().getAttribute("flush"));
+            request.getSession().removeAttribute("flush");
+        }
+        RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/reports/index.jsp");
+        rd.forward(request, response);
     }
 
 }

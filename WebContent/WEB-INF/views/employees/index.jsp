@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:import url="../layout/app.jsp">
     <c:param name="content">
-        <%--flushメッセージ、create、update、destroyから渡されたメッセージを表示 --%>
+        <%--flushメッセージ、login、create、update、destroyから渡されたメッセージを表示 --%>
         <c:if test="${flush != null}">
             <div id="flush_success">
                 <c:out value="${flush}"></c:out>
@@ -17,15 +17,14 @@
                     <th>氏名</th>
                     <th>操作</th>
                 </tr>
-                <%--2行目 Servletから渡されたデータ(最大15件分) とステータス--%>
+                <%--2行目以降 従業員リストの各情報を表示し、奇数・偶数行でスタイルを分ける--%>
                 <c:forEach var="employee" items="${employees}" varStatus="status">
-                    <%--この意味？？ row0 of row1 --%>
                     <tr class="row${status.count % 2}">
                         <%--「社員番号」カラム --%>
                         <td><c:out value="${employee.code}" /></td>
                         <%--「氏名」カラム --%>
                         <td><c:out value="${employee.name}" /></td>
-                        <%--『操作」カラム、flag0 or flag1 --%>
+                        <%--『操作」カラム、delete_flag0 or flag1 --%>
                         <td>
                             <c:choose>
                                 <c:when test="${employee.delete_flag == 1}">

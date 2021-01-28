@@ -4,7 +4,7 @@
 <c:import url="/WEB-INF/views/layout/app.jsp">
     <c:param name="content">
         <c:choose>
-            <%--レポートがあった場合 --%>
+            <%--indexで選択したレポート情報があった場合 --%>
             <c:when test="${report != null }">
             <h2>日報　詳細ページ</h2>
 
@@ -40,12 +40,12 @@
                 </tbody>
             </table>
 
-            <%--ログインidとレポートidが同じなら、editへリンクする --%>
+            <%--ログインした際に登録したidとレポートの従業員idが同じなら、editへリンクする --%>
             <c:if test="${sessionScope.login_employee.id == report.employee.id}">
                 <p><a href="<c:url value="/reports/edit?id=${report.id}" />">この日報を編集する</a></p>
             </c:if>
             </c:when>
-            <%--レポートに入力がない場合 --%>
+            <%--indexで選択したレポート情報がない場合 --%>
             <c:otherwise>
                 <h2>お探しのデータは見つかりませんでした。</h2>
             </c:otherwise>

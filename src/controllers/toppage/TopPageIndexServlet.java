@@ -58,7 +58,7 @@ public class TopPageIndexServlet extends HttpServlet {
         request.setAttribute("reports_count", reports_count);
         request.setAttribute("page", page);
 
-        //flushメッセージがloginのセッションスコープに登録されていたら、リクエストスコープに渡して削除する
+        //flushメッセージがLoginServletのセッションスコープに登録されていたら、リクエストスコープに渡して削除する
         if(request.getSession().getAttribute("flush") != null) {
             request.setAttribute("flush", request.getSession().getAttribute("flush"));
             request.getSession().removeAttribute("flush");

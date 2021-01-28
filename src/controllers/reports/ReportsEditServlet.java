@@ -40,7 +40,7 @@ public class ReportsEditServlet extends HttpServlet {
 
         //セッションスコープに登録したlogin_employeeをクラス型で取得
         Employee login_employee = (Employee)request.getSession().getAttribute("login_employee");
-        //idのレポート情報がない、かつlogin_employeeのIdとidが一致する場合は
+        //indexで選択したidのレポート情報がない、かつlogin_employeeのIdとレポートの従業員idが一致する場合は
         if(r != null && login_employee.getId() == r.getEmployee().getId()){
             //オブジェクトr、セッションId及びレポートidをリクエストスコープに登録し、edit.jspに渡す
             request.setAttribute("report",  r);;

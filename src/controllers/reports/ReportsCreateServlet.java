@@ -44,7 +44,7 @@ public class ReportsCreateServlet extends HttpServlet {
             EntityManager em = DBUtil.createEntityManager();
             Report r = new Report();
 
-            //セッションに登録したログイン情報をセット
+            //セッションに登録したログインユーザー情報をセット
             r.setEmployee((Employee)request.getSession().getAttribute("login_employee"));
 
             //もう一度作成月日を取得して、空欄チェックする
@@ -55,6 +55,7 @@ public class ReportsCreateServlet extends HttpServlet {
                 report_date = Date.valueOf(request.getParameter("report_date"));
             }
 
+            //入力されたレポート情報をセット
             r.setReport_date(report_date);
             r.setTitle(request.getParameter("title"));
             r.setContent(request.getParameter("content"));
@@ -64,6 +65,7 @@ public class ReportsCreateServlet extends HttpServlet {
 
             //バリデーション
             List<String> errors = ReportValidator.validate(r);
+            //エラーがある場合、セッションID、レポート情報、エラーリストをリクエストスコープに登録しnew.jspに渡す
             if(errors.size() > 0){
                 em.close();
                 request.setAttribute("_token",  request.getSession().getId());
@@ -72,10 +74,13 @@ public class ReportsCreateServlet extends HttpServlet {
                 RequestDispatcher rd = request.getRequestDispatcher("WEB-INF/views/reports/new.jsp");
                 rd.forward(request, response);
             }else{
+                //エラーがない場合、データベースに保存する
                 em.getTransaction().begin();
                 em.persist(r);
                 em.getTransaction().commit();
                 em.close();
+
+                //flushメッセージをセッションスコープに登録し、reports/indexServletに渡す
                 request.getSession().setAttribute("flush",  "登録が完了しました。");
 
                 response.sendRedirect(request.getContextPath() + "/reports/index");

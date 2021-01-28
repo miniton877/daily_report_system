@@ -32,7 +32,7 @@ public class EmployeesNewServlet extends HttpServlet {
 
     //CRF対策、セッションIDの取得
         request.setAttribute("_token", request.getSession().getId());
-        //初期データ0のエラー回避、空のインスタンスオブジェクト作成
+        //エラー回避用、空のインスタンスオブジェクト作成
         request.setAttribute("employee", new Employee());
         //JSPを呼び出す
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/employees/new.jsp");

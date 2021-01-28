@@ -34,9 +34,9 @@ public class ReportsNewServlet extends HttpServlet {
         request.setAttribute("_token", request.getSession().getId());
     //インスタンスオブジェクトrを作成
         Report r = new Report();
-    //作成月日をセット、レポートを新規作成する際に、入力欄に月日が入っている
+    //作成月日をセット（レポート新規作成時、月日が既に入力されている）
         r.setReport_date(new Date(System.currentTimeMillis()));
-    //リクエストスコープで、rをjspに渡す
+    //リクエストスコープで、オブジェクトrをnew.jspに渡す
         request.setAttribute("report",  r);
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/reports/new.jsp");
         rd.forward(request, response);

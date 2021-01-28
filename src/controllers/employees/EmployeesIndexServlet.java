@@ -32,8 +32,7 @@ public class EmployeesIndexServlet extends HttpServlet {
     /**
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         //データベースと接続
         EntityManager em = DBUtil.createEntityManager();
 
@@ -41,34 +40,38 @@ public class EmployeesIndexServlet extends HttpServlet {
         //pageの取得
         int page = 1; //初期設定
         try {
-            //getParameter()でリクエストパラメータpageの値を取得
+            //getParameter()でリクエストパラメータpageの値を取得しInteger型にキャスト
             page = Integer.parseInt(request.getParameter("page"));
         } catch (NumberFormatException e) {
         }
-        //Employeeクラス型リストを作成、15件分
+
+        /*データベースから15件の従業員情報を取得し
+         * Employeeクラスのオブジェクトに格納し、それをリスト化する
+         */
         List<Employee> employees = em.createNamedQuery("getAllEmployees", Employee.class)
-                .setFirstResult(15 * (page - 1)) //ページの最初のデータを決める　0, 15, 30,,,
-                .setMaxResults(15) //最初のデータから15件取得
+                .setFirstResult(15 * (page - 1)) //取得したページにおける、最初のデータを決める　0, 15, 30,,,
+                .setMaxResults(15) //最初のデータから15件分を取得
                 .getResultList(); //15件分をリスト化する
+
         //全登録件数をlong型で取得
         long employees_count = (long) em.createNamedQuery("getEmployeesCount", Long.class)
                 .getSingleResult();
         em.close();
+
         //リクエストスコープで値を渡す
         request.setAttribute("employees", employees); //15件分のリスト
         request.setAttribute("employees_count", employees_count); //全登録件数
         request.setAttribute("page", page); //page
 
         /*flushメッセージ
-         * create, update, destroy実行時に、セッションスコープでflushを受け取ったら、
-         * リクエストスコープに渡してセッションスコープから削除する
+         * login, create, update, destroy実行時に、セッションスコープにflushメッセージを登録
+         * ここで、値をリクエストスコープに渡し、セッションスコープから削除する
          */
-
         if (request.getSession().getAttribute("flush") != null) {
             request.setAttribute("flush", request.getSession().getAttribute("flush"));
             request.getSession().removeAttribute("flush");
         }
-        //viewの呼び出し
+        //index.jspの呼び出し
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/employees/index.jsp");
         rd.forward(request, response);
     }

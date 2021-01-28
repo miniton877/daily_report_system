@@ -4,7 +4,7 @@
 <c:import url="/WEB-INF/views/layout/app.jsp">
     <c:param name="content">
         <c:choose>
-            <%--indexで取得したidのデータをshowServletから受け取る --%>
+            <%--indexで取得したidの従業員情報をshowServletから受け取る --%>
             <c:when test="${employee != null}">
                 <h2>id : ${employee.id} の従業員情報　詳細ページ</h2>
 
@@ -20,7 +20,7 @@
                             <th>氏名</th>
                             <td><c:out value="${employee.name}" /></td>
                         </tr>
-                        <%--3行目、flag1：管理者　flag0：一般 --%>
+                        <%--3行目、admin_flag1：管理者　admin_flag0：一般 --%>
                         <tr>
                             <th>権限</th>
                             <td>
@@ -51,7 +51,7 @@
                 <p><a href="<c:url value='/employees/edit?id=${employee.id}' />">この従業員情報を編集する</a></p>
             </c:when>
 
-            <%-- indexのデータがない場合 --%>
+            <%-- 従業員情報がない場合 --%>
             <c:otherwise>
                 <h2>お探しのデータは見つかりませんでした。</h2>
             </c:otherwise>

@@ -20,7 +20,7 @@
                     <th class="report_title">タイトル</th>
                     <th class="report_action">操作</th>
                 </tr>
-                <%--2行目 --%>
+                <%--2行目以降 --%>
                 <c:forEach var="report" items="${reports }" varStatus="status">
                     <%--奇数偶数でスタイルを変える --%>
                     <tr class="row${status.count % 2 }">

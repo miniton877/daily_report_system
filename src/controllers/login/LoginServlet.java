@@ -60,21 +60,25 @@ public class LoginServlet extends HttpServlet {
         String code = request.getParameter("code");
         String plain_pass = request.getParameter("password");
 
-        //クラスオブジェクトをnullにする理由は？？？
+        //クラス型オブジェクトeにnullを代入（ログアウト状態）
         Employee e = null;
 
-        //code、passに空がなければ、データベースと接続
+        //code、passが空欄でない場合、データベースと接続
         if(code != null && !code.equals("") && plain_pass != null && !plain_pass.equals("")){
             EntityManager em = DBUtil.createEntityManager();
-            //パスワードをハッシュ化
+
+            //パスワードをハッシュ化し、文字列にする
             String password = EncryptUtil.getPasswordEncrypt(
                     plain_pass,
                     (String)this.getServletContext().getAttribute("pepper")
                     );
 
-            //codeとpassが正しいかのチェック？既存かどうかの確認？
+            //入力されたcodeとpasswordが正しいかどうか確認
             try{
-                //SELECT文で該当情報をクラスオブジェクトに???
+                /*checkLoginCodeAndPasswordのクエリに
+                 * リクエストパラメータcodeとpasswordを代入
+                 * データベースと照合し、該当する従業員情報をオブジェクトに格納
+                 */
                 e = em.createNamedQuery("checkLoginCodeAndPassword", Employee.class)
                         .setParameter("code",  code)
                         .setParameter("pass",  password)
@@ -82,15 +86,16 @@ public class LoginServlet extends HttpServlet {
             }catch(NoResultException ex){}
             em.close();
 
-            //既存データがある場合、認証結果の変数はtrue
+            //データベースに該当する従業員情報がある場合、認証結果の変数はtrue
             if(e != null){
                 check_result = true;
             }
         }//catch終了
 
         if(!check_result){
-            /*認証できなかった場合の（false)リクエストスコープ、login.jspに値が渡される
-             * hasErrorがtrue、login.jspでエラーが表示される
+            /*認証できなかった場合（check_result = false)
+             * リクエストスコープにセッションID、hasError=true、入力されたcodeが登録され、login.jspに渡される
+             * （hasErrorがtrueの場合、login.jspでエラーが表示される）
              */
             request.setAttribute("_token",  request.getSession().getId());
             request.setAttribute("hasError",  true);
@@ -98,10 +103,10 @@ public class LoginServlet extends HttpServlet {
             RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/login/login.jsp");
             rd.forward(request,  response);
         }else{
-          //認証できたら（true)、ログイン状態にしてトップページへリダイレクト
-            //login_employeeをセッションスコープに登録、つまりログイン状態
+          //認証された場合、ログイン状態にしてトップページへリダイレクト
+            //login_employeeをセッションスコープに登録　（＝ログイン状態）
             request.getSession().setAttribute("login_employee",  e);
-            //flushメッセージをセッションスコープに登録して、どこへ？？？
+            //flushメッセージをセッションスコープに登録して、TopPageIndexServletへ渡す
             request.getSession().setAttribute("flush",  "ログインしました。");
             response.sendRedirect(request.getContextPath() + "/");
         }

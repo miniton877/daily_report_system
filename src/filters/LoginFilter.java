@@ -55,7 +55,7 @@ public class LoginFilter implements Filter {
 
             //ログイン画面以外について、サーブレットパスが/loginでなければ
             if(!servlet_path.equals("/login")) {
-                //return２つ（空）
+                //ifの結果に空蘭2つをリターン
 
                 // １・ログアウトしている状態であれば、ログイン画面にリダイレクト
                 if(e == null) {
@@ -74,7 +74,7 @@ public class LoginFilter implements Filter {
                 // システムのトップページにリダイレクト
                 if(e != null) {
                     ((HttpServletResponse)response).sendRedirect(context_path + "/");
-                    return; //elseへ空のリターン
+                    return; //elseの結果に空蘭をリターン
                 }
             }
         }
